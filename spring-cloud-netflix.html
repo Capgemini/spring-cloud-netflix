@@ -530,6 +530,57 @@ normal Eureka functionality under <code>/v2/*</code>.</p>
 <div class="paragraph">
 <p>Eureka background reading: see <a href="https://github.com/cfregly/fluxcapacitor/wiki/NetflixOSS-FAQ#eureka-service-discovery-load-balancer">flux capacitor</a> and <a href="https://groups.google.com/forum/?fromgroups#!topic/eureka_netflix/g3p2r7gHnN0">google group discussion</a>.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can run the Eureka server as an executable JAR (or WAR) using the
+<a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#build-tool-plugins">Spring
+Boot build tools</a>, but to avoid problems with classpath scanning in
+Jersey 1.x you have to tell the build plugins to unpack the jars that
+contain JAX-RS resources, e.g. (for Maven)</p>
+</div>
+<div class="listingblock">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;plugin&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+    &lt;configuration&gt;
+        &lt;requiresUnpack&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;com.netflix.eureka&lt;/groupId&gt;
+                &lt;artifactId&gt;eureka-core&lt;/artifactId&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;com.netflix.eureka&lt;/groupId&gt;
+                &lt;artifactId&gt;eureka-client&lt;/artifactId&gt;
+            &lt;/dependency&gt;
+        &lt;/requiresUnpack&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or with Gradle</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">apply plugin: 'spring-boot'
+springBoot {
+    requiresUnpack = ['com.netflix.eureka:eureka-core','com.netflix.eureka:eureka-client']
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -772,6 +823,8 @@ public class Application extends FeignConfigurer {
 <div class="paragraph">
 <p>Zuul&#8217;s rule engine allows rules and filters to be written in essentially any JVM language, with built in support for Java and Groovy.</p>
 </div>
+<div class="sect2">
+<h3 id="netflix-zuul-reverse-proxy">Embedded Zuul Reverse Proxy</h3>
 <div class="paragraph">
 <p>Spring Cloud has created an embedded Zuul proxy to ease the development of a very common use case where a UI application wants to proxy calls to one or more back end services.  To enable it, annotate a Spring Boot main class with <code>@EnableZuulProxy</code>.  This forwards local calls to <code>/proxy/*</code> to the appropriate service.  The proxy uses Ribbon to locate an instance to forward to via Eureka.  Forwarding to the service is protected by a Hystrix circuit breaker.  Rules are configured via the Spring environment.  The Config Server is an ideal place for the Zuul configuration.  Configuration rules look like the following:</p>
 </div>
@@ -786,9 +839,10 @@ public class Application extends FeignConfigurer {
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-10-06 14:04:16 UTC
+Last updated 2014-10-07 09:52:09 UTC
 </div>
 </div>
 </body>
