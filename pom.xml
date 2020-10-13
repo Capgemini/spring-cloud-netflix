@@ -233,7 +233,7 @@
         <feign.version>6.1.2</feign.version>
         <hystrix.version>1.4.0-RC5</hystrix.version>
         <ribbon.version>2.0-RC9</ribbon.version>
-        <turbine.version>0.4</turbine.version>
+        <turbine.version>2.0.0-DP.1</turbine.version>
         <zuul.version>1.0.24</zuul.version>
         <netflix.rxjava.version>0.20.6</netflix.rxjava.version>
     </properties>
